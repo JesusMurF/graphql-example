@@ -2,18 +2,31 @@ const express = require('express');
 const { graphql, buildSchema } = require('graphql');
 const graphqlHTTP = require('express-graphql');
 const cors = require('cors');
+const Champion = require('./champion');
 
 const app = express();
 app.use(cors());
 
 const schema = buildSchema(`
   type Query {
-    language: String
+    language: String,
+    getChampion: [Champion]
+  }
+
+  type Champion {
+    name: String,
+    attackDamage: Float
   }
 `);
 
+const champions = [
+  new Champion('Ashe', 100),
+  new Champion('Vayne', 200)
+]
+
 const rootValue = {
-  language: () => 'GraphQL'
+  language: () => 'GraphQL',
+  getChampion: () => champions
 }
 
 app.use('/graphql', graphqlHTTP({
