@@ -10,7 +10,7 @@ app.use(cors());
 const schema = buildSchema(`
   type Query {
     language: String,
-    getChampion: [Champion]
+    getChampions: [Champion]
   }
 
   type Champion {
@@ -26,7 +26,7 @@ const champions = [
 
 const rootValue = {
   language: () => 'GraphQL',
-  getChampion: () => champions
+  getChampions: () => champions
 }
 
 app.use('/graphql', graphqlHTTP({
