@@ -1,28 +1,29 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <p>{{ lang }}</p>
+    <button @click="getLanguage">Get Language</button>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import axios from 'axios';
 
 export default {
   name: 'app',
-  components: {
-    HelloWorld
+  data() {
+    return {
+      lang: ''
+    }
+  },
+  methods: {
+     async getLanguage() {
+      try {
+        const response = await axios.post('http://localhost:4000/graphql', {query: '{language}'});
+        this.lang = response.data.data.language;
+      } catch (error) {
+        console.log(error);
+      }
+    }
   }
 }
 </script>
-
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
