@@ -11,6 +11,7 @@ const schema = buildSchema(`
   type Query {
     language: String,
     getChampions: [Champion]
+    getChampionByName(name: String!): Champion
   }
 
   type Champion {
@@ -26,7 +27,8 @@ const champions = [
 
 const rootValue = {
   language: () => 'GraphQL',
-  getChampions: () => champions
+  getChampions: () => champions,
+  getChampionByName: ({ name }) => champions.find(element => element.name === name)
 }
 
 app.use('/graphql', graphqlHTTP({
