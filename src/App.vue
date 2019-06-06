@@ -3,9 +3,12 @@
     <p>{{ lang }}</p>
     <div v-bind:key="champion.name" v-for="champion in champions">{{ champion.name }} {{ champion.attackDamage }}</div>
     <p>The champion {{ champion }}</p>
+    <p>Updated champion {{ updatedChampion }}</p>
     <button @click="getLanguage">Get Language</button>
     <button @click="getChampions">Get Champions</button>
     Name: <input type="text" v-model="name">
+    Attack Damage: <input v-model.number="attack">
+    <button @click="updateAttackDamage">Update champion by name</button>
     <button @click="getChampionByName">Get champion by name</button>
   </div>
 </template>
@@ -19,7 +22,9 @@ export default {
     return {
       lang: '',
       champions: [],
-      champion: ''
+      champion: '',
+      updatedChampion: {},
+      attack: 5.5
     }
   },
   methods: {
@@ -40,7 +45,7 @@ export default {
       }
     },
     async getChampionByName () {
-      const res = await axios.post('http://localhost:4000/graphql', {
+      const response = await axios.post('http://localhost:4000/graphql', {
         query: `
         query GetChampionByName($championName: String!) {
           getChampionByName(name: $championName) {
@@ -52,7 +57,24 @@ export default {
           championName: this.name
         }
       })
-      this.champion = res.data.data.getChampionByName
+      this.champion = response.data.data.getChampionByName
+    },
+    async updateAttackDamage () {
+      const response = await axios.post('http://localhost:4000/graphql', {
+        query: `
+          mutation UpdateAttackDamage(
+            $championName: String!, $attackDamage: Float) {
+              updateAttackDamage(name: $championName, attackDamage: $attackDamage) {
+                name
+                attackDamage
+              }
+            }`,
+            variables: {
+              championName: this.name,
+              attackDamage: this.attack
+            }
+      })
+      this.updatedChampion = response.data.data.updateAttackDamage;
     }
   }
 }

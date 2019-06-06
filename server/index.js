@@ -1,5 +1,5 @@
 const express = require('express');
-const { graphql, buildSchema } = require('graphql');
+const { buildSchema } = require('graphql');
 const graphqlHTTP = require('express-graphql');
 const cors = require('cors');
 const Champion = require('./champion');
@@ -12,6 +12,10 @@ const schema = buildSchema(`
     language: String,
     getChampions: [Champion]
     getChampionByName(name: String!): Champion
+  }
+
+  type Mutation {
+    updateAttackDamage(name: String!, attackDamage: Float): Champion
   }
 
   type Champion {
@@ -28,7 +32,12 @@ const champions = [
 const rootValue = {
   language: () => 'GraphQL',
   getChampions: () => champions,
-  getChampionByName: ({ name }) => champions.find(element => element.name === name)
+  getChampionByName: ({ name }) => champions.find(element => element.name === name),
+  updateAttackDamage: ({name, attackDamage = 150}) => {
+    const champion = champions.find(element => element.name === name);
+    champion.attackDamage = attackDamage;
+    return champion;
+  }
 }
 
 app.use('/graphql', graphqlHTTP({
