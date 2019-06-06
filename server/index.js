@@ -2,7 +2,7 @@ const express = require('express');
 const { buildSchema } = require('graphql');
 const graphqlHTTP = require('express-graphql');
 const cors = require('cors');
-const Champion = require('./champion');
+const Todo = require('./todo');
 
 const app = express();
 app.use(cors());
@@ -10,33 +10,33 @@ app.use(cors());
 const schema = buildSchema(`
   type Query {
     language: String,
-    getChampions: [Champion]
-    getChampionByName(name: String!): Champion
+    getTodos: [Todo]
+    getTodoById(id: Int!): Todo
   }
 
   type Mutation {
-    updateAttackDamage(name: String!, attackDamage: Float): Champion
+    updateTodo(id: Int!, title: String): Todo
   }
 
-  type Champion {
-    name: String,
-    attackDamage: Float
+  type Todo {
+    id: Int
+    title: String
   }
 `);
 
-const champions = [
-  new Champion('Ashe', 100),
-  new Champion('Vayne', 200)
+const todos = [
+  new Todo(1, 'Mi primer todo'),
+  new Todo(2, 'Mi segundo todo')
 ]
 
 const rootValue = {
   language: () => 'GraphQL',
-  getChampions: () => champions,
-  getChampionByName: ({ name }) => champions.find(element => element.name === name),
-  updateAttackDamage: ({name, attackDamage = 150}) => {
-    const champion = champions.find(element => element.name === name);
-    champion.attackDamage = attackDamage;
-    return champion;
+  getTodos: () => todos,
+  getTodoById: ({ id }) => todos.find(todo => todo.id === id),
+  updateTodo: ({id, title = ''}) => {
+    const todo = todos.find(todo => todo.id === id);
+    todo.title = title;
+    return todo;
   }
 }
 
