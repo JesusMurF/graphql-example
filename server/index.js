@@ -2,7 +2,6 @@ const express = require('express');
 const { buildSchema } = require('graphql');
 const graphqlHTTP = require('express-graphql');
 const cors = require('cors');
-const Todo = require('./todo');
 
 const app = express();
 app.use(cors());
@@ -25,8 +24,8 @@ const schema = buildSchema(`
 `);
 
 const todos = [
-  new Todo(1, 'Mi primer todo'),
-  new Todo(2, 'Mi segundo todo')
+  {id: 1, title: 'Mi primer todo'},
+  {id: 2, title: 'Mi segundo todo'}
 ]
 
 const rootValue = {
