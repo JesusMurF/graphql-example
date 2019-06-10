@@ -10,22 +10,22 @@ const schema = buildSchema(`
   type Query {
     language: String,
     getTodos: [Todo]
-    getTodoById(id: Int!): Todo
+    getTodoById(id: String!): Todo
   }
 
   type Mutation {
-    updateTodo(id: Int!, title: String): Todo
+    updateTodo(id: String!, title: String): Todo
   }
 
   type Todo {
-    id: Int
+    id: String
     title: String
   }
 `);
 
 const todos = [
-  {id: 1, title: 'Mi primer todo'},
-  {id: 2, title: 'Mi segundo todo'}
+  {id: '1', title: 'Mi primer todo'},
+  {id: '2', title: 'Mi segundo todo'}
 ]
 
 const rootValue = {
